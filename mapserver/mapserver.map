@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+#
+# MapServer Mapfile
+
+MAP
+    NAME "SITN"
+    UNITS METERS
+    # RESOLUTION and DEFRESOLUTION default to 72. If you
+    # change RESOLUTION to some other value, also change
+    # DEFRESOLUTION. See
+    # http://mapserver.org/development/rfc/ms-rfc-55.html
+    RESOLUTION 72 ## Also set in Openlayers for especially legends
+    DEFRESOLUTION 72
+    UNITS METERS
+
+    # use MS_DEBUGLEVEL as environment variable
+    # See: https://hub.docker.com/r/camptocamp/mapserver/
+    # ${IS_HIDDEN_PROD}CONFIG "MS_ERRORFILE" "${MAPSERVER_WEB_TEMPPATH}/ms_c2cgeoportal.log"
+    # ${IS_HIDDEN_PROD}DEBUG 5
+
+    # MAXSIZE shouldn't be less than 5000 for MF print on A3
+    MAXSIZE 15000
+
+    SHAPEPATH "./"
+
+    IMAGECOLOR 255 255 255
+    STATUS ON
+    EXTENT 2500000 1130000 2600000 1250000
+
+    LEGEND
+        STATUS ON        # Draw legend in the map
+        KEYSIZE 20 15      # Define the size of the legend icon.
+        LABEL            # Used only for embedded legend (in the map)
+            TYPE TRUETYPE
+            FONT "arial"
+            COLOR 0 0 0
+            SIZE 8
+            ANTIALIAS TRUE
+            WRAP '$'
+        END
+    END
+
+
+    OUTPUTFORMAT
+        NAME "jpeg"
+        DRIVER "AGG/JPEG"
+        MIMETYPE "image/jpeg"
+        IMAGEMODE RGB
+        EXTENSION "jpeg"
+        FORMATOPTION "QUALITY=75,PROGRESSIVE=TRUE"
+    END
+    OUTPUTFORMAT
+        NAME "png256"
+        DRIVER "AGG/PNG"
+        MIMETYPE "image/png256"
+        IMAGEMODE RGBA
+        EXTENSION "png"
+        FORMATOPTION "INTERLACE=OFF"
+        FORMATOPTION "QUANTIZE_FORCE=ON"
+        FORMATOPTION "QUANTIZE_DITHER=OFF"
+        FORMATOPTION "QUANTIZE_COLORS=256"
+    END
+    OUTPUTFORMAT
+        NAME "png"
+        DRIVER "AGG/PNG"
+        MIMETYPE "image/png"
+        IMAGEMODE RGBA
+        EXTENSION "png"
+        FORMATOPTION "INTERLACE=OFF"
+        FORMATOPTION "QUANTIZE_DITHER=OFF"
+    END
+    OUTPUTFORMAT
+        NAME "application/json"
+        DRIVER "OGR/GEOJSON"
+        MIMETYPE "application/json"
+        FORMATOPTION "FORM=SIMPLE"
+        FORMATOPTION "STORAGE=memory"
+    END
+
+    PROJECTION
+        "init=epsg:2056"
+    END
+
+    WEB
+        TEMPPATH ""
+        IMAGEPATH ""
+        IMAGEURL "/ms_tmp/"
+        METADATA
+            "ows_title" "Serveur cartographique du SITN"
+            "wms_abstract" "Serveur cartographique publique du SITN"
+            "oga_onlineresource" "http://localhost/main/ogcapi"
+            "ows_onlineresource" "http://localhost/services/wms?"
+            "ows_service_onlineresource" "http://localhost"
+            "ows_srs" "EPSG:${SRID}"
+            "ows_contactorganization" "SITN"
+            "ows_contactelectronicmailaddress" "sitn@ne.ch"
+            "wms_enable_request" "*"
+            "ows_enable_request" "*"
+            "wms_allow_getmap_without_styles" "true"
+            "oga_html_template_directory" "/usr/local/share/mapserver/ogcapi/templates/html-bootstrap4/"
+        END
+    END
+END
